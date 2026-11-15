@@ -1,23 +1,18 @@
 {
-  "name": "finance-desk-slack",
-  "version": "0.1.0",
+  "name": "finance-desk",
+  "private": true,
   "type": "module",
-  "license": "MIT",
+  "description": "Finance and crypto breaking-news desk. Drafts X posts and Instagram cards, then sends them to Slack for approval.",
   "scripts": {
-    "check": "npx tsc --checkJs --noEmit --skipLibCheck --esModuleInterop --target esnext --module nodenext --moduleResolution nodenext app.js",
-    "start": "node app.js",
-    "lint": "npx @biomejs/biome check .",
-    "lint:fix": "npx @biomejs/biome check --write .",
-    "test": "node --test"
+    "check": "tsc --noEmit",
+    "dev": "agent-sdk dev"
   },
   "dependencies": {
-    "@openai/agents": "^0.21.0",
-    "@slack/bolt": "^5.1.0",
-    "dotenv": "~18.0.10"
+    "@grok/agent-sdk": "^0.6.0",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.6.6",
-    "@slack/cli-hooks": "^2.0.0",
-    "typescript": "^7.0.2"
+    "@types/node": "^22.14.0",
+    "typescript": "6.0.3"
   }
 }

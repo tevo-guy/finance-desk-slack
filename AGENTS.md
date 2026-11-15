@@ -1,21 +1,44 @@
-# AGENTS.md
+# finance-desk
 
-This file provides guidance to coding agents when working with code in this repository.
+Agent SDK project (`@grok/agent-sdk`). This file is
+for coding agents editing the project. The served agent's prompt is
+`bot/instructions.md`.
 
-## What This Is
+## Loop
 
-A **Starter Agent** for Slack built with Bolt for JavaScript and the **OpenAI Agents SDK**. This is a minimal starter template. It includes one example tool (emoji reactions) and optional Slack MCP Server integration.
+```bash
+agent-sdk validate --dir .
+agent-sdk info --dir . --json
+agent-sdk run --dir . --message "..."
+agent-sdk eval --dir .
+npm run check
+```
 
-## Slack Plugin
+Run the CLI under Node, never Bun.
 
-To install the Slack plugin for your coding agent, follow [Claude Code, Codex, Cursor, and Other Coding Agents](./README.md#claude-code-codex-cursor-and-other-coding-agents) in the README.
+## Desk
 
-## Before you finish
+Scout verifies a wire or a primary source. Copy writes the X post and the card fields. `make-graphic` autofills Canva when connected. `send-for-approval` posts the pack to Slack and refuses X-only sources. Approve stores the pack and posts nothing. Metricool is a later step.
 
-Run `npm run lint`, `npm run check`, and `npm test`. CI runs the same on every PR.
+## Layout
 
-## Code Style
+- `bot/instructions.md` is the always-on prompt. Keep it short.
+- `bot/tools/<name>.ts` is one tool per file. The filename is the tool name.
+- `bot/lib/` is shared code. Never discovered.
+- `evals/` is filesystem evals (`evals/evals.config.ts` required).
+  Not `bot/evals/`. That path is ignored.
 
-- JSDoc + TypeScript validation (`npm run check`)
-- Kebab-case filenames
-- No code comments. Make the code explain itself with clear names, tests, or types. Put the reason for a change in the PR description.
+## Do not
+
+- Grow host TypeScript for formatting, classification, or reply composition.
+  That stays in instructions/skills. Host code owns auth, idempotency,
+  evidence seeding, and side-effect gates.
+- Add npm deps on a first cut. Stick to what `@grok/agent-sdk` already ships.
+- Point `serve` at a parent folder during bring-up. It mounts every sibling.
+
+## Pointers
+
+- Package loop: `node_modules/@grok/agent-sdk/AGENTS.md`
+- Skills: `node_modules/@grok/agent-sdk/skills/` (`create-agent`, `deploy`, `evals`, `hillclimb`, `debug`)
+- Docs: `npx @grok/agent-sdk docs`
+- LLM docs index: `node_modules/@grok/agent-sdk/dist/docs/llms.txt`
