@@ -199,6 +199,31 @@ export function readStories(value: unknown): CachedStory[] {
   return out;
 }
 
+/** Keep a few of the newest items from each source so a fast blog cannot crowd out the rest. */
+export function balanceBySource<T extends { sourceName: string; publishedAt: string }>(
+  stories: readonly T[],
+  perSource: number,
+  limit: number,
+): T[] {
+  const stamp = (value: string) => {
+    const parsed = Date.parse(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+  };
+  const grouped = new Map<string, T[]>();
+  for (const story of stories) {
+    const list = grouped.get(story.sourceName) ?? [];
+    list.push(story);
+    grouped.set(story.sourceName, list);
+  }
+  const balanced: T[] = [];
+  for (const list of grouped.values()) {
+    list.sort((a, b) => stamp(b.publishedAt) - stamp(a.publishedAt));
+    balanced.push(...list.slice(0, perSource));
+  }
+  balanced.sort((a, b) => stamp(b.publishedAt) - stamp(a.publishedAt));
+  return balanced.slice(0, limit);
+}
+
 export function freshStories(items: readonly CachedStory[], nowMs: number): CachedStory[] {
   const cutoff = nowMs - 6 * 60 * 60 * 1000;
   return items.filter((item) => {

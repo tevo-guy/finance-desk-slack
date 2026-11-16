@@ -33,12 +33,12 @@ export default slackChannel({
   suggestedPromptsTitle: "Finance desk",
   suggestedPrompts: [
     {
-      title: "What's breaking",
-      message: "What finance or crypto story is verified right now? Do not send it to Slack yet.",
+      title: "What's trending",
+      message: "What finance or crypto story would a broad audience repost right now? Do not send it to Slack yet.",
     },
     {
-      title: "Send the latest",
-      message: "Verify the top story, draft the X post and Instagram card, and send the pack to Slack for approval.",
+      title: "Send the trending story",
+      message: "Pick the verified story a broad X and Instagram audience would repost, draft the post and card, and send the pack to Slack for approval.",
     },
   ],
   onBlockAction: async (ctx, action) => {

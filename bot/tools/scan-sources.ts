@@ -2,6 +2,7 @@ import { prompt } from "@grok/agent-sdk";
 import { defineTool } from "@grok/agent-sdk/tools";
 import * as z from "zod/v4";
 import {
+  balanceBySource,
   canonicalUrl,
   decodeXml,
   freshStories,
@@ -154,13 +155,14 @@ export default defineTool({
     Read finance and crypto wires, plus recent X posts when X_BEARER_TOKEN is set.
     Call this before drafting. Items with pass true are citeable.
     Items in tips, and every X URL, are leads only. Do not cite them as the source.
+    The list keeps a few headlines from each wire. Recency does not pick the story.
   `,
   effect: "read",
   inputSchema: z.object({
-    limit: z.number().int().min(1).max(12).optional(),
+    limit: z.number().int().min(1).max(30).optional(),
   }),
   async execute(input, ctx) {
-    const limit = input.limit ?? 8;
+    const limit = input.limit ?? 21;
     const now = new Date();
     const fetchedAt = now.toISOString();
     const feedResults = await Promise.all(
@@ -196,18 +198,13 @@ export default defineTool({
         });
       }
     }
-    const stamp = (value: string) => {
-      const parsed = Date.parse(value);
-      return Number.isFinite(parsed) ? parsed : 0;
-    };
     const seen = new Set<string>();
     const unique = wires.filter((story) => {
       if (seen.has(story.url)) return false;
       seen.add(story.url);
       return true;
     });
-    unique.sort((a, b) => stamp(b.publishedAt) - stamp(a.publishedAt));
-    const trimmed = unique.slice(0, limit);
+    const trimmed = balanceBySource(unique, 3, limit);
     const cache = [...byUrl.values()].slice(-80);
     await ctx.host.kv.put(SCAN_KEY, { items: cache });
     const x = await searchX();

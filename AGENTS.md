@@ -18,7 +18,7 @@ Run the CLI under Node, never Bun.
 
 ## Desk
 
-Scout verifies a wire or a primary source. Copy writes the X post and the card fields. `make-graphic` autofills Canva when connected. `send-for-approval` posts the pack to Slack and refuses X-only sources. Approve stores the pack and posts nothing. Metricool is a later step.
+Scout verifies a wire or a primary source that a broad audience would repost. `read-coaching` and `save-coaching` hold the audience brief. Copy writes the X post and the card fields. `make-graphic` autofills Canva when connected. `send-for-approval` posts the pack to Slack and refuses X-only sources. Approve stores the pack and posts nothing. Metricool is a later step.
 
 ## Layout
 
